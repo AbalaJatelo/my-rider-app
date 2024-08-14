@@ -8,5 +8,14 @@
     "email": "xyz@gmail.com",
     "password": "xyz",
     "isAdmin": true
+  },
+  {
+    "email": "wshammah051@gmail.com",
+    "password": "$2a$10$jIPxRLVuTpyzTPZqCA4IQ.Ht1JILJdsQvXn3x19SAnDRPjvmHC/9y",
+    "isAdmin": false
+  },
+  {
+    "email": "wshammah051@gmail.com",
+    "password": "$2a$10$e5CptH6Y8UTmequ/DxUdOO2QqrJdf2G4sSRaMz9bp4MOyd3ZCNWPa"
   }
 ]

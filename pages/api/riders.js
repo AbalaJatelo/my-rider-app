@@ -2,27 +2,30 @@
 import fs from 'fs';
 import path from 'path';
 
+const RIDERS_FILE = path.resolve('data/riders.json');
+
 export default async function handler(req, res) {
-    if (req.method === 'POST') {
-        try {
-            const ridersFilePath = path.join(process.cwd(), 'data', 'riders.json');
-            const fileContents = fs.existsSync(ridersFilePath)
-                ? fs.readFileSync(ridersFilePath, 'utf-8')
-                : '[]';
-
-            const riders = JSON.parse(fileContents);
-            const newRider = req.body;
-
-            riders.push(newRider);
-
-            fs.writeFileSync(ridersFilePath, JSON.stringify(riders, null, 2));
-
-            res.status(200).json({ message: 'Rider added successfully!' });
-        } catch (error) {
-            console.error('Failed to add rider:', error);
-            res.status(500).json({ error: 'Failed to add rider' });
-        }
-    } else {
-        res.status(405).json({ error: 'Method not allowed' });
+  if (req.method === 'GET') {
+    let riders = [];
+    try {
+      riders = JSON.parse(fs.readFileSync(RIDERS_FILE, 'utf-8'));
+    } catch (err) {
+      riders = [];
     }
+    res.status(200).json(riders);
+  } else if (req.method === 'POST') {
+    const { id, name } = req.body;
+    let riders = [];
+    try {
+      riders = JSON.parse(fs.readFileSync(RIDERS_FILE, 'utf-8'));
+    } catch (err) {
+      riders = [];
+    }
+    riders.push({ id, name });
+    fs.writeFileSync(RIDERS_FILE, JSON.stringify(riders, null, 2));
+    res.status(200).json({ success: true });
+  } else {
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
 }

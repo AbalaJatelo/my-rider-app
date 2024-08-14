@@ -1,20 +1,35 @@
 // scripts/generateRiders.js
-import fs from 'fs';
-import path from 'path';
+const fs = require('fs');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+const QRCode = require('qrcode');
 
-const RIDERS_FILE = path.resolve('data/riders.json');
-
-const generateRandomRiders = (num) => {
+const generateRiders = async (numRiders = 1000000) => {
   const riders = [];
-  for (let i = 0; i < num; i++) {
+
+  for (let i = 0; i < numRiders; i++) {
+    const id = uuidv4(); // Generate unique ID for each rider
+    const name = `Rider_${i + 1}`;
+    const qrCodeUrl = `https://my-rider-app.vercel.app/rider/${id}`;
+
+    // Generate QR Code
+    const qrCodeDataURL = await QRCode.toDataURL(qrCodeUrl);
+
     riders.push({
-      id: `R${Math.floor(Math.random() * 10000000).toString().padStart(8, '0')}`,
-      name: `Rider ${i + 1}`,
+      id,
+      name,
+      qrCode: qrCodeDataURL,
     });
+
+    if (i % 1000 === 0) {
+      console.log(`Generated ${i + 1} riders`);
+    }
   }
-  return riders;
+
+  const ridersFilePath = path.join(__dirname, '../data/riders.json');
+
+  fs.writeFileSync(ridersFilePath, JSON.stringify(riders, null, 2));
+  console.log(`Successfully generated ${numRiders} riders!`);
 };
 
-const riders = generateRandomRiders(1000000);
-fs.writeFileSync(RIDERS_FILE, JSON.stringify(riders, null, 2));
-console.log(`Generated ${riders.length} riders`);
+generateRiders().catch(console.error);
