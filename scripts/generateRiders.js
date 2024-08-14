@@ -4,7 +4,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const QRCode = require('qrcode');
 
-const generateRiders = async (numRiders = 1000000) => {
+const generateRiders = async (numRiders = 1000) => {
   const riders = [];
 
   for (let i = 0; i < numRiders; i++) {
