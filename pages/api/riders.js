@@ -2,26 +2,27 @@
 import fs from 'fs';
 import path from 'path';
 
-const ridersFilePath = path.join(process.cwd(), 'data', 'riders.json');
+export default async function handler(req, res) {
+    if (req.method === 'POST') {
+        try {
+            const ridersFilePath = path.join(process.cwd(), 'data', 'riders.json');
+            const fileContents = fs.existsSync(ridersFilePath)
+                ? fs.readFileSync(ridersFilePath, 'utf-8')
+                : '[]';
 
-export async function handler(req, res) {
-  if (req.method === 'POST') {
-    // Add new rider
-    const { id, name, qrCode } = req.body;
+            const riders = JSON.parse(fileContents);
+            const newRider = req.body;
 
-    const ridersData = fs.readFileSync(ridersFilePath, 'utf8');
-    const riders = JSON.parse(ridersData);
+            riders.push(newRider);
 
-    riders.push({ id, name, qrCode });
-    fs.writeFileSync(ridersFilePath, JSON.stringify(riders, null, 2));
+            fs.writeFileSync(ridersFilePath, JSON.stringify(riders, null, 2));
 
-    return res.status(201).json({ message: 'Rider added' });
-  } else if (req.method === 'GET') {
-    // Get all riders
-    const ridersData = fs.readFileSync(ridersFilePath, 'utf8');
-    return res.status(200).json(JSON.parse(ridersData));
-  } else {
-    res.setHeader('Allow', ['POST', 'GET']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
+            res.status(200).json({ message: 'Rider added successfully!' });
+        } catch (error) {
+            console.error('Failed to add rider:', error);
+            res.status(500).json({ error: 'Failed to add rider' });
+        }
+    } else {
+        res.status(405).json({ error: 'Method not allowed' });
+    }
 }
