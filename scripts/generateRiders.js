@@ -10,7 +10,7 @@ const generateRiders = async (numRiders = 5) => {
   for (let i = 0; i < numRiders; i++) {
     const id = uuidv4(); // Generate unique ID for each rider
     const name = `Rider_${i + 1}`;
-    const qrCodeUrl = `https://my-rider-app-git-master-eugenes-projects-bf3cfcc5.vercel.app/rider/${id}`;
+    const qrCodeUrl = `https://https://my-rider-app.vercel.app//rider/${id}`;
 
     // Generate QR Code
     const qrCodeDataURL = await QRCode.toDataURL(qrCodeUrl);

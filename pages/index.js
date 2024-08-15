@@ -5,10 +5,10 @@ import Footer from '../components/Footer';
 export default function Home() {
   return (
     <div>
-      <Header />
       <main>
         <h1>Welcome to the Rider Management System</h1>
       </main>
+      <Header />
       <Footer />
     </div>
   );
