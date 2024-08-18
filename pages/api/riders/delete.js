@@ -3,7 +3,7 @@ import path from 'path';
 
 const filePath = path.join(process.cwd(), 'data', 'riders.json');
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method === 'DELETE') {
     try {
       const { code } = req.body;
@@ -13,7 +13,7 @@ export default function handler(req, res) {
       }
 
       // Read existing data
-      const fileData = fs.readFileSync(filePath);
+      const fileData = fs.readFileSync(filePath, 'utf-8');
       const riders = JSON.parse(fileData);
 
       // Find index of rider to delete
@@ -31,6 +31,7 @@ export default function handler(req, res) {
 
       res.status(200).json({ message: 'Rider deleted successfully' });
     } catch (error) {
+      console.error('Error deleting rider:', error); // Log the error for debugging
       res.status(500).json({ message: 'Failed to delete rider', error: error.message });
     }
   } else {

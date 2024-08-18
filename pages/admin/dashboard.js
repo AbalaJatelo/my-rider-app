@@ -1,11 +1,12 @@
+// pages/index.js
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 const Dashboard = () => {
     const router = useRouter();
     const [riders, setRiders] = useState([]);
-    const [riderName, setRiderName] = useState('');
-    const [newRider, setNewRider] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedRider, setSelectedRider] = useState(null);
 
     useEffect(() => {
         // Fetch riders here
@@ -14,29 +15,6 @@ const Dashboard = () => {
             .then((data) => setRiders(data))
             .catch((error) => console.error('Error fetching riders:', error));
     }, []);
-
-    // Add new rider function
-    const handleAddRider = async (e) => {
-        e.preventDefault();
-
-        const response = await fetch('/api/riders/add', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: riderName }),
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            setNewRider(result.rider); // Set the newly added rider
-            alert('Rider added successfully');
-            // Fetch the updated list of riders
-            const updatedRiders = await fetch('/api/riders').then((res) => res.json());
-            setRiders(updatedRiders);
-            setRiderName('');
-        } else {
-            alert('Failed to add rider');
-        }
-    };
 
     // Delete rider function
     const handleDeleteRider = async (code) => {
@@ -51,6 +29,8 @@ const Dashboard = () => {
             // Fetch the updated list of riders
             const updatedRiders = await fetch('/api/riders').then((res) => res.json());
             setRiders(updatedRiders);
+            // Clear selected rider
+            setSelectedRider(null);
         } else {
             alert('Failed to delete rider');
         }
@@ -62,44 +42,65 @@ const Dashboard = () => {
         router.push('/auth/login');
     };
 
+    // Filter riders based on search query
+    const filteredRiders = riders.filter(rider =>
+        rider.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        rider.nationalId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        rider.bikeRegNumber.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Handle rider selection
+    const handleSelectRider = (rider) => {
+        setSelectedRider(rider);
+    };
+
     return (
-        <div>
-            <h1>Admin Dashboard</h1>
-            <button onClick={handleLogout}>Logout</button>
+        <div style={{ display: 'flex', height: '100vh', backgroundColor: '#fff' }}>
+            {/* Sidebar */}
+            <aside style={{ width: '250px', backgroundColor: '#f4f4f4', padding: '20px', boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}>
+                <h1>Admin Dashboard</h1>
+                <h2>
+                    <a href="./add-rider" style={{ display: 'block', marginBottom: '20px', textDecoration: 'none', color: '#FF6600', fontSize: '16px' }}>Add New Rider</a>
+                </h2>
+                <button onClick={handleLogout} style={{ backgroundColor: '#FF6600', color: '#fff', border: 'none', padding: '10px 15px', borderRadius: '5px' }}>
+                    Logout
+                </button>
+            </aside>
 
-            <h2>Add Rider</h2>
-            <form onSubmit={handleAddRider}>
-                <label>
-                    Name:
-                    <input
-                        type="text"
-                        value={riderName}
-                        onChange={(e) => setRiderName(e.target.value)}
-                        required
-                    />
-                </label>
-                <button type="submit">Add Rider</button>
-            </form>
+            {/* Main content */}
+            <main style={{ flex: 1, padding: '20px' }}>
+                <h2>Riders List</h2>
+                <input
+                    type="text"
+                    placeholder="Search riders..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    style={{ marginBottom: '20px', padding: '8px', width: '100%', border: '1px solid #ddd', borderRadius: '5px' }}
+                />
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                    {filteredRiders.map((rider) => (
+                        <li key={rider.code} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', borderBottom: '1px solid #ddd', paddingBottom: '10px' }}>
+                            <span style={{ flex: 1 }}>{rider.name} - {rider.code}</span>
+                            <img src={rider.qrCode} alt={`QR code for ${rider.code}`} style={{ marginLeft: '10px', width: '50px', height: '50px' }} />
+                            <button onClick={() => handleSelectRider(rider)} style={{ marginLeft: '10px', backgroundColor: '#FF6600', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px' }}>View Details</button>
+                            <button onClick={() => handleDeleteRider(rider.code)} style={{ marginLeft: '10px', backgroundColor: '#FF6600', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px' }}>Delete</button>
+                        </li>
+                    ))}
+                </ul>
 
-            {newRider && (
-                <div>
-                    <h3>New Rider Added</h3>
-                    <p>Name: {newRider.name}</p>
-                    <p>Code: {newRider.code}</p>
-                    <img src={newRider.qrCode} alt={`QR code for ${newRider.code}`} />
-                </div>
-            )}
-
-            <h2>Riders List</h2>
-            <ul>
-                {riders.map((rider) => (
-                    <li key={rider.code}>
-                        {rider.name} - {rider.code}
-                        <img src={rider.qrCode} alt={`QR code for ${rider.code}`} style={{ marginLeft: '10px', width: '50px', height: '50px' }} />
-                        <button onClick={() => handleDeleteRider(rider.code)} style={{ marginLeft: '10px' }}>Delete</button>
-                    </li>
-                ))}
-            </ul>
+                {selectedRider && (
+                    <div style={{ marginTop: '20px', padding: '20px', border: '1px solid #ddd', borderRadius: '5px' }}>
+                        <h3>Rider Details</h3>
+                        <p><strong>Name:</strong> {selectedRider.name}</p>
+                        <p><strong>Code:</strong> {selectedRider.code}</p>
+                        <p><strong>Age:</strong> {selectedRider.age}</p>
+                        <p><strong>Sex:</strong> {selectedRider.sex}</p>
+                        <p><strong>Bike Registration Number:</strong> {selectedRider.bikeRegNumber}</p>
+                        <p><strong>National ID:</strong> {selectedRider.nationalId}</p>
+                        <img src={selectedRider.qrCode} alt={`QR code for ${selectedRider.code}`} />
+                    </div>
+                )}
+            </main>
         </div>
     );
 };
