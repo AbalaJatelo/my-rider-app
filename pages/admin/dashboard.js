@@ -75,7 +75,7 @@ const Dashboard = () => {
 
                 {/* Main content */}
                 <main style={styles.mainContent}>
-                    <h2>Riders List</h2>
+                    <h2 style={styles.heading}>Riders List</h2>
                     <input
                         type="text"
                         placeholder="Search riders..."
@@ -83,22 +83,27 @@ const Dashboard = () => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         style={styles.searchInput}
                     />
-                    
+
                     {searchQuery && filteredRiders.length > 0 ? (
-                        <ul style={styles.riderList}>
-                            {filteredRiders.map((rider) => (
-                                <li key={rider.code} style={styles.riderItem}>
-                                    <span style={styles.riderInfo}>{rider.name} - {rider.code}</span>
+                        <div style={styles.riderGrid}>
+                            {filteredRiders.slice(0, 10).map((rider) => (
+                                <div key={rider.code} style={styles.riderCard}>
                                     <img src={rider.qrCode} alt={`QR code for ${rider.code}`} style={styles.qrCode} />
-                                    <button onClick={() => handleSelectRider(rider)} style={styles.detailButton}>
-                                        <FaEye style={styles.icon} /> View Details
-                                    </button>
-                                    <button onClick={() => handleDeleteRider(rider.code)} style={styles.deleteButton}>
-                                        <FaTrash style={styles.icon} /> Delete
-                                    </button>
-                                </li>
+                                    <div style={styles.riderInfo}>
+                                        <span style={styles.riderName}>{rider.name}</span>
+                                        <span style={styles.riderCode}>{rider.code}</span>
+                                    </div>
+                                    <div style={styles.buttonGroup}>
+                                        <button onClick={() => handleSelectRider(rider)} style={styles.detailButton}>
+                                            <FaEye style={styles.icon} /> View Details
+                                        </button>
+                                        <button onClick={() => handleDeleteRider(rider.code)} style={styles.deleteButton}>
+                                            <FaTrash style={styles.icon} /> Delete
+                                        </button>
+                                    </div>
+                                </div>
                             ))}
-                        </ul>
+                        </div>
                     ) : (
                         <p style={styles.noResults}>{searchQuery ? 'No riders found.' : 'Enter a search query to find riders.'}</p>
                     )}
@@ -174,6 +179,11 @@ const styles = {
         padding: '20px',
         overflowY: 'auto',
     },
+    heading: {
+        fontSize: '2rem',
+        color: '#0288d1', // Darker blue for heading
+        marginBottom: '20px',
+    },
     searchInput: {
         marginBottom: '20px',
         padding: '8px',
@@ -181,24 +191,45 @@ const styles = {
         border: '1px solid #ddd',
         borderRadius: '5px',
     },
-    riderList: {
-        listStyle: 'none',
-        padding: 0,
+    riderGrid: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(5, 1fr)',
+        gap: '20px',
+        maxWidth: '100%',
+        overflowX: 'auto',
     },
-    riderItem: {
-        marginBottom: '10px',
+    riderCard: {
+        backgroundColor: '#fff',
+        borderRadius: '8px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        padding: '15px',
+        textAlign: 'center',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
-        borderBottom: '1px solid #ddd',
-        paddingBottom: '10px',
-        gap: '10px',
     },
     riderInfo: {
-        flex: 1,
+        margin: '10px 0',
+    },
+    riderName: {
+        fontSize: '1.2rem',
+        color: '#333',
+        fontWeight: 'bold',
+    },
+    riderCode: {
+        color: '#666',
+        fontSize: '0.9rem',
     },
     qrCode: {
-        width: '50px',
-        height: '50px',
+        width: '80px',
+        height: '80px',
+        borderRadius: '8px',
+        marginBottom: '10px',
+    },
+    buttonGroup: {
+        display: 'flex',
+        gap: '10px',
+        marginTop: '10px',
     },
     detailButton: {
         backgroundColor: '#0288d1', // Darker blue for button
@@ -210,10 +241,9 @@ const styles = {
         alignItems: 'center',
         gap: '0.5rem',
         cursor: 'pointer',
-        marginLeft: '10px',
     },
     deleteButton: {
-        backgroundColor: '#0288d1', // Darker blue for button
+        backgroundColor: '#d32f2f', // Red for delete button
         color: '#fff',
         border: 'none',
         padding: '5px 10px',
@@ -222,19 +252,21 @@ const styles = {
         alignItems: 'center',
         gap: '0.5rem',
         cursor: 'pointer',
-        marginLeft: '10px',
     },
     noResults: {
         color: '#888',
+        textAlign: 'center',
     },
     detailsCard: {
         marginTop: '20px',
         padding: '20px',
         border: '1px solid #ddd',
         borderRadius: '5px',
+        backgroundColor: '#fff',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
     },
     detailsQrCode: {
-        width: '100px',
+        width: '120px',
         height: 'auto',
         marginTop: '10px',
     },

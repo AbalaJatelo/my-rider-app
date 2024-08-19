@@ -3,5 +3,15 @@
     "email": "abongoeugene@gmail.com",
     "password": "Abongo001.",
     "isAdmin": true
+  },
+  {
+    "email": "wshammah051@gmail.com",
+    "password": "Watamelon2",
+    "isAdmin": false
+  },
+  {
+    "email": "mshindibeans125@gmail.com",
+    "password": "ebbyisfast20",
+    "isAdmin": false
   }
 ]
