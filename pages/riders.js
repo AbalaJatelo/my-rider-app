@@ -1,23 +1,11 @@
 import { useEffect, useState } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from '../components/Header'; // Ensure the path is correct
+import Footer from '../components/Footer'; // Ensure the path is correct
 
 const containerStyle = {
   display: 'flex',
   flexDirection: 'column',
   minHeight: '100vh',
-};
-
-const headerStyle = {
-  position: 'fixed',
-  top: '0',
-  left: '0',
-  width: '100%',
-  backgroundColor: '#0070f3',
-  color: '#fff',
-  padding: '10px 20px',
-  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  zIndex: '1000', // Ensures the header is above other content
 };
 
 const mainStyle = {
@@ -28,7 +16,7 @@ const mainStyle = {
 
 const headingStyle = {
   textAlign: 'center',
-  color: '#0070f3',
+  color: '#0070f3', // Updated color
   fontSize: '2rem',
   marginBottom: '20px',
 };
@@ -37,7 +25,7 @@ const inputStyle = {
   padding: '12px',
   marginBottom: '20px',
   width: '100%',
-  border: '2px solid #0070f3',
+  border: '2px solid #0070f3', // Updated color
   borderRadius: '8px',
   fontSize: '1rem',
   boxSizing: 'border-box',
@@ -74,7 +62,7 @@ const imgStyle = {
   width: '100px',
   height: '100px',
   borderRadius: '8px',
-  border: '2px solid #0070f3',
+  border: '2px solid #0070f3', // Updated color
   marginBottom: '10px',
 };
 
@@ -104,8 +92,9 @@ const Riders = () => {
 
   return (
     <div style={containerStyle}>
-      <Header style={headerStyle} />
+      {/* Ensure Header has fixed positioning in its own file */}
       <main style={mainStyle}>
+      <Header /> 
         <h1 style={headingStyle}>Riders List</h1>
         <input
           type="text"
