@@ -1,4 +1,3 @@
-// pages/index.js
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
@@ -44,6 +43,7 @@ const Dashboard = () => {
 
     // Filter riders based on search query
     const filteredRiders = riders.filter(rider =>
+        rider.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
         rider.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         rider.nationalId.toLowerCase().includes(searchQuery.toLowerCase()) ||
         rider.bikeRegNumber.toLowerCase().includes(searchQuery.toLowerCase())
@@ -77,16 +77,21 @@ const Dashboard = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     style={{ marginBottom: '20px', padding: '8px', width: '100%', border: '1px solid #ddd', borderRadius: '5px' }}
                 />
-                <ul style={{ listStyle: 'none', padding: 0 }}>
-                    {filteredRiders.map((rider) => (
-                        <li key={rider.code} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', borderBottom: '1px solid #ddd', paddingBottom: '10px' }}>
-                            <span style={{ flex: 1 }}>{rider.name} - {rider.code}</span>
-                            <img src={rider.qrCode} alt={`QR code for ${rider.code}`} style={{ marginLeft: '10px', width: '50px', height: '50px' }} />
-                            <button onClick={() => handleSelectRider(rider)} style={{ marginLeft: '10px', backgroundColor: '#FF6600', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px' }}>View Details</button>
-                            <button onClick={() => handleDeleteRider(rider.code)} style={{ marginLeft: '10px', backgroundColor: '#FF6600', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px' }}>Delete</button>
-                        </li>
-                    ))}
-                </ul>
+                
+                {searchQuery && filteredRiders.length > 0 ? (
+                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                        {filteredRiders.map((rider) => (
+                            <li key={rider.code} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', borderBottom: '1px solid #ddd', paddingBottom: '10px' }}>
+                                <span style={{ flex: 1 }}>{rider.name} - {rider.code}</span>
+                                <img src={rider.qrCode} alt={`QR code for ${rider.code}`} style={{ marginLeft: '10px', width: '50px', height: '50px' }} />
+                                <button onClick={() => handleSelectRider(rider)} style={{ marginLeft: '10px', backgroundColor: '#FF6600', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px' }}>View Details</button>
+                                <button onClick={() => handleDeleteRider(rider.code)} style={{ marginLeft: '10px', backgroundColor: '#FF6600', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '5px' }}>Delete</button>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p style={{ color: '#888' }}>{searchQuery ? 'No riders found.' : 'Enter a search query to find riders.'}</p>
+                )}
 
                 {selectedRider && (
                     <div style={{ marginTop: '20px', padding: '20px', border: '1px solid #ddd', borderRadius: '5px' }}>

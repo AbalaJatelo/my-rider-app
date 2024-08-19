@@ -4,39 +4,40 @@ const containerStyle = {
   padding: '20px',
   maxWidth: '1200px',
   margin: '0 auto',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+  gap: '20px',
+};
+
+const cardStyle = {
+  backgroundColor: '#fff',
+  borderRadius: '10px',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  padding: '20px',
+  textAlign: 'center',
+  transition: 'transform 0.3s, box-shadow 0.3s',
+};
+
+const cardHoverStyle = {
+  transform: 'translateY(-5px)',
+  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
 };
 
 const headingStyle = {
-  fontSize: '2rem',
-  marginBottom: '20px',
-  color: '#FF6600',
+  fontSize: '1.5rem',
+  marginBottom: '10px',
+  color: '#333',
 };
 
-const tableStyle = {
-  width: '100%',
-  borderCollapse: 'collapse',
-  marginBottom: '20px',
-};
-
-const thStyle = {
-  backgroundColor: '#FF6600',
-  color: '#fff',
-  padding: '12px',
-  textAlign: 'left',
-};
-
-const tdStyle = {
-  padding: '12px',
-  borderBottom: '1px solid #ddd',
-};
-
-const imgStyle = {
+const qrCodeStyle = {
   maxWidth: '100px',
   height: 'auto',
+  marginBottom: '10px',
 };
 
 const RiderList = () => {
   const [riders, setRiders] = useState([]);
+  const [hoveredCard, setHoveredCard] = useState(null);
 
   useEffect(() => {
     const fetchRiders = async () => {
@@ -50,27 +51,18 @@ const RiderList = () => {
 
   return (
     <div style={containerStyle}>
-      <h2 style={headingStyle}>Riders</h2>
-      <table style={tableStyle}>
-        <thead>
-          <tr>
-            <th style={thStyle}>ID</th>
-            <th style={thStyle}>Name</th>
-            <th style={thStyle}>QR Code</th>
-          </tr>
-        </thead>
-        <tbody>
-          {riders.slice(0, 10).map((rider) => (
-            <tr key={rider.id}>
-              <td style={tdStyle}>{rider.id}</td>
-              <td style={tdStyle}>{rider.name}</td>
-              <td style={tdStyle}>
-                <img src={rider.qrCode} alt={`QR Code for ${rider.name}`} style={imgStyle} />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {riders.slice(0, 10).map((rider, index) => (
+        <div
+          key={rider.id}
+          style={hoveredCard === index ? { ...cardStyle, ...cardHoverStyle } : cardStyle}
+          onMouseEnter={() => setHoveredCard(index)}
+          onMouseLeave={() => setHoveredCard(null)}
+        >
+          <h2 style={headingStyle}>{rider.name}</h2>
+          <p>ID: {rider.id}</p>
+          <img src={rider.qrCode} alt={`QR Code for ${rider.name}`} style={qrCodeStyle} />
+        </div>
+      ))}
     </div>
   );
 };

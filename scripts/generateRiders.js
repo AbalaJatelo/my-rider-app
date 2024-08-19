@@ -36,7 +36,7 @@ const generateRiders = async (numRiders = 4) => {
     const bikeRegNumber = `${getRandomElement(bikeRegPrefixes)}-${getRandomInt(1000, 9999)}`; // Generate bike registration number
     const nationalId = `${getRandomInt(100000000, 999999999)}`; // Generate random national ID
 
-    const qrCodeUrl = `https://my-rider-app-eugenes-projects-bf3cfcc5.vercel.app/rider/${id}`;
+    const qrCodeUrl = `https://my-rider-app-git-master-eugenes-projects-bf3cfcc5.vercel.app/rider/${id}`;
 
     // Generate QR Code
     const qrCodeDataURL = await QRCode.toDataURL(qrCodeUrl);
