@@ -1,17 +1,34 @@
 import { useEffect, useState } from 'react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const containerStyle = {
-  maxWidth: '800px',
-  margin: '0 auto',
-  padding: '20px',
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: '100vh',
+};
+
+const headerStyle = {
+  position: 'fixed',
+  top: '0',
+  left: '0',
+  width: '100%',
+  backgroundColor: '#0070f3',
+  color: '#fff',
+  padding: '10px 20px',
+  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+  zIndex: '1000', // Ensures the header is above other content
+};
+
+const mainStyle = {
+  flex: 1,
+  padding: '80px 20px 20px', // Padding to account for the fixed header
   backgroundColor: '#f9f9f9',
-  borderRadius: '10px',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
 };
 
 const headingStyle = {
   textAlign: 'center',
-  color: '#FF6600',
+  color: '#0070f3',
   fontSize: '2rem',
   marginBottom: '20px',
 };
@@ -20,39 +37,45 @@ const inputStyle = {
   padding: '12px',
   marginBottom: '20px',
   width: '100%',
-  border: '2px solid #FF6600',
+  border: '2px solid #0070f3',
   borderRadius: '8px',
   fontSize: '1rem',
   boxSizing: 'border-box',
 };
 
-const listStyle = {
+const gridStyle = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(5, 1fr)', // 5 columns
+  gap: '20px',
   listStyle: 'none',
   padding: '0',
+  margin: '0',
 };
 
 const listItemStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: '10px',
   backgroundColor: '#fff',
   borderRadius: '8px',
-  marginBottom: '10px',
+  padding: '15px',
   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  textAlign: 'center',
 };
 
 const nameStyle = {
   fontSize: '1.2rem',
   color: '#333',
   fontWeight: 'bold',
+  marginBottom: '10px',
 };
 
 const imgStyle = {
-  width: '60px',
-  height: '60px',
+  width: '100px',
+  height: '100px',
   borderRadius: '8px',
-  border: '2px solid #FF6600',
+  border: '2px solid #0070f3',
+  marginBottom: '10px',
 };
 
 const Riders = () => {
@@ -81,22 +104,29 @@ const Riders = () => {
 
   return (
     <div style={containerStyle}>
-      <h1 style={headingStyle}>Riders List</h1>
-      <input
-        type="text"
-        placeholder="Search riders..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        style={inputStyle}
-      />
-      <ul style={listStyle}>
-        {filteredRiders.map((rider) => (
-          <li key={rider.id} style={listItemStyle}>
-            <span style={nameStyle}>{rider.name}</span>
-            <img src={rider.qrCode} alt={`QR Code for ${rider.name}`} style={imgStyle} />
-          </li>
-        ))}
-      </ul>
+      <Header style={headerStyle} />
+      <main style={mainStyle}>
+        <h1 style={headingStyle}>Riders List</h1>
+        <input
+          type="text"
+          placeholder="Search riders..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={inputStyle}
+        />
+        <ul style={gridStyle}>
+          {filteredRiders.slice(0, 10).map((rider) => (
+            <li key={rider.id} style={listItemStyle}>
+              <img src={rider.qrCode} alt={`QR Code for ${rider.name}`} style={imgStyle} />
+              <span style={nameStyle}>{rider.name}</span>
+            </li>
+          ))}
+        </ul>
+        {filteredRiders.length === 0 && (
+          <p style={{ textAlign: 'center', color: '#666' }}>No riders found</p>
+        )}
+      </main>
+      <Footer />
     </div>
   );
 };
