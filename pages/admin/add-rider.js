@@ -53,9 +53,9 @@ const AddRider = () => {
       <aside style={{ width: '250px', backgroundColor: '#f4f4f4', padding: '20px', boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}>
         <h1>Admin Dashboard</h1>
         <h2>
-          <a href="./add-rider" style={{ display: 'block', marginBottom: '20px', textDecoration: 'none', color: '#FF6600', fontSize: '16px' }}>Add New Rider</a>
+          <a href="./add-rider" style={{ display: 'block', marginBottom: '20px', textDecoration: 'none', color: '#0070f3', fontSize: '16px' }}>Add New Rider</a>
         </h2>
-        <button onClick={() => router.push('/')} style={{ backgroundColor: '#FF6600', color: '#fff', border: 'none', padding: '10px 15px', borderRadius: '5px' }}>
+        <button onClick={() => router.push('/')} style={{ backgroundColor: '#0070f3', color: '#fff', border: 'none', padding: '10px 15px', borderRadius: '5px' }}>
           Go to Dashboard
         </button>
       </aside>
@@ -74,7 +74,7 @@ const AddRider = () => {
           </select>
           <input type="text" name="bikeRegNumber" placeholder="Bike Registration Number" required style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '5px' }} />
           <input type="text" name="nationalId" placeholder="National ID" required style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '5px' }} />
-          <button type="submit" style={{ backgroundColor: '#FF6600', color: '#fff', border: 'none', padding: '10px 15px', borderRadius: '5px' }}>Add Rider</button>
+          <button type="submit" style={{ backgroundColor: '#0070f3', color: '#fff', border: 'none', padding: '10px 15px', borderRadius: '5px' }}>Add Rider</button>
         </form>
       </main>
     </div>
