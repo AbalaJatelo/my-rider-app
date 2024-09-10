@@ -16,16 +16,14 @@ const getRandomElement = (array) => array[Math.floor(Math.random() * array.lengt
 // Sample data for random generation
 const sexes = ['Male', 'Female'];
 const bikeRegPrefixes = ['ABC', 'XYZ', '123', 'DEF'];
-const firstNames = ['John', 'Jane', 'Michael', 'Emily', 'Chris', 'Jessica', 'Matthew', 'Amanda', 'David', 'Sarah'];
-const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'García', 'Rodriguez', 'Martínez'];
 
+// Generate rider data with a numerical count
 const generateRiders = async (numRiders = 1000) => {
   const riders = [];
+  const baseUrl = 'http://okadamonipot.com'; // Base URL for redirection
 
-  for (let i = 0; i < numRiders; i++) {
-    const firstName = getRandomElement(firstNames);
-    const lastName = getRandomElement(lastNames);
-    const name = `${firstName} ${lastName}`; // Combine first and last name
+  for (let i = 1; i <= numRiders; i++) {
+    const name = `Rider ${i}`; // Generate rider name as "Rider X"
     const age = getRandomInt(18, 65); // Generate random age between 18 and 65
     const sex = getRandomElement(sexes); // Randomly choose sex
     const bikeRegNumber = `${getRandomElement(bikeRegPrefixes)}-${getRandomInt(1000, 9999)}`; // Generate bike registration number
@@ -34,11 +32,11 @@ const generateRiders = async (numRiders = 1000) => {
     // Generate a consistent ID based on the rider's name and national ID
     const id = generateConsistentId(`${name}-${nationalId}`);
 
-    // Create the QR code content from the rider's details
-    const qrCodeContent = `Name: ${name}\nID: ${id}\nNational ID: ${nationalId}\nUDID: ${bikeRegNumber}`;
+    // Create the URL for the QR code to redirect to
+    const qrCodeUrl = `${baseUrl}/${id}`;
 
-    // Generate QR Code
-    const qrCodeDataURL = await QRCode.toDataURL(qrCodeContent);
+    // Generate QR Code with URL
+    const qrCodeDataURL = await QRCode.toDataURL(qrCodeUrl);
 
     riders.push({
       id,
@@ -51,7 +49,7 @@ const generateRiders = async (numRiders = 1000) => {
     });
 
     if (i % 1000 === 0) {
-      console.log(`Generated ${i + 1} riders`);
+      console.log(`Generated ${i} riders`);
     }
   }
 

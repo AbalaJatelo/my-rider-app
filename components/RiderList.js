@@ -62,9 +62,13 @@ const RiderList = () => {
 
   useEffect(() => {
     const fetchRiders = async () => {
-      const response = await fetch('/api/riders');
-      const data = await response.json();
-      setRiders(data);
+      try {
+        const response = await fetch('/api/riders');
+        const data = await response.json();
+        setRiders(data);
+      } catch (error) {
+        console.error('Failed to fetch riders:', error);
+      }
     };
 
     fetchRiders();
@@ -81,13 +85,14 @@ const RiderList = () => {
             onMouseEnter={() => setHoveredCard(index)}
             onMouseLeave={() => setHoveredCard(null)}
           >
-            <h2 style={{ ...headingStyle, ...responsiveStyles.heading }}>{rider.name}</h2>
-            <p>ID: {rider.id}</p>
-            <img src={rider.qrCode} alt={`QR Code for ${rider.name}`} style={{ ...qrCodeStyle, ...responsiveStyles.qrCode }} />
+            {/* <h2 style={{ ...headingStyle, ...responsiveStyles.heading }}>{rider.name}</h2> */}
+            <p>ID: {rider.id}</p> <p>{rider.name}</p>
+            <a href={`http://okadamonipot.com/${rider.id}`} target="_blank" rel="noopener noreferrer">
+              <img src={rider.qrCode} alt={`QR Code for ${rider.id}`} style={{ ...qrCodeStyle, ...responsiveStyles.qrCode }} />
+            </a>
           </div>
         ))}
       </main>
-      
     </div>
   );
 };
